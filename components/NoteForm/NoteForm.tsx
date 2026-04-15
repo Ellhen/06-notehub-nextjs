@@ -29,10 +29,7 @@ const validationSchema = Yup.object({
     .min(3, 'Minimum 3 characters')
     .max(50, 'Maximum 50 characters')
     .required('Title is required'),
-  content: Yup.string()
-    .min(5, 'Minimum 5 characters')
-    .max(500, 'Maximum 500 characters')
-    .required('Content is required'),
+  content: Yup.string().max(500, 'Maximum 500 characters'),
   tag: Yup.string().required('Tag is required')
 })
 
@@ -103,13 +100,13 @@ export function NoteForm({ onClose }: NoteFormProps) {
         <div className={`${css.actions} flex gap-3`}>
           <button
             type="submit"
-            className="cursor-pointer rounded bg-blue-600 px-3 py-1.5 text-base text-white transition-colors duration-200 hover:bg-blue-700"
+            className="cursor-pointer rounded border border-blue-600  px-3 py-1.5 text-base text-blue-600 backdrop-blur-md transition-all duration-200 hover:bg-blue-700 hover:text-white"
           >
             Create note
           </button>
           <button
             type="button"
-            className="cursor-pointer rounded bg-[#dc3545] px-3 py-1.5 text-base text-white transition-colors duration-200 hover:bg-[#bb2d3b]"
+            className="cursor-pointer rounded bg-[#dc3545] px-3 py-1.5 text-base text-white transition-all duration-200 hover:bg-[#bb2d3b]"
             onClick={onClose}
           >
             Cancel

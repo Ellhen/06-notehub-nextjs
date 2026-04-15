@@ -1,36 +1,53 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, type ReactNode, type MouseEvent } from 'react'
+import { createPortal } from 'react-dom'
 import css from './Modal.module.css'
 
 interface Props {
-  children: React.ReactNode
+  children: ReactNode
   onClose: () => void
 }
 
 export function Modal({ children, onClose }: Props) {
   useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
+    const handleEscape = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
         onClose()
       }
     }
 
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
     document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+      document.removeEventListener('keydown', handleEscape)
+    }
   }, [onClose])
 
-  return (
+  const handleBackdropClick = (): void => {
+    onClose()
+  }
+
+  const handleModalClick = (event: MouseEvent<HTMLDivElement>): void => {
+    event.stopPropagation()
+  }
+
+  return createPortal(
     <div
       className={css.backdrop}
-      onClick={onClose}
+      onClick={handleBackdropClick}
     >
       <div
         className={css.modal}
-        onClick={e => e.stopPropagation()}
+        onClick={handleModalClick}
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
