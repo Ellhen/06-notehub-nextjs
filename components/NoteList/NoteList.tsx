@@ -41,7 +41,7 @@ export function NoteList({ notes }: NoteListProps) {
             </Link>
             <button
               type="button"
-              className={`${css.button}`}
+              className={css.button}
               onClick={() => deleteMutation.mutate(note.id)}
             >
               Delete

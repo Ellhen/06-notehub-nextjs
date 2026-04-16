@@ -6,6 +6,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { fetchNotes } from '@/lib/api'
+import type { NoteTag } from '@/types/note'
 import { SearchBox } from '@/components/SearchBox/SearchBox'
 import Pagination from '@/components/Pagination/Pagination'
 import { NoteList } from '@/components/NoteList/NoteList'
@@ -19,9 +20,16 @@ const PER_PAGE = 12
 interface Props {
   initialPage: number
   initialSearch: string
+  initialTag?: NoteTag
+  basePath?: string
 }
 
-export default function NotesClient({ initialPage, initialSearch }: Props) {
+export default function NotesClient({
+  initialPage,
+  initialSearch,
+  initialTag,
+  basePath = '/notes'
+}: Props) {
   const [page, setPage] = useState(initialPage)
   const [search, setSearch] = useState(initialSearch)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -40,13 +48,13 @@ export default function NotesClient({ initialPage, initialSearch }: Props) {
       params.set('search', search)
     }
 
-    const nextUrl = `/notes${params.toString() ? `?${params.toString()}` : ''}`
-    const currentUrl = `/notes${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+    const nextUrl = `${basePath}${params.toString() ? `?${params.toString()}` : ''}`
+    const currentUrl = `${basePath}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
 
     if (nextUrl !== currentUrl) {
       router.replace(nextUrl)
     }
-  }, [page, search, router, searchParams])
+  }, [page, search, router, searchParams, basePath])
 
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
     setSearch(value)
@@ -54,12 +62,13 @@ export default function NotesClient({ initialPage, initialSearch }: Props) {
   }, 500)
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes', page, search],
+    queryKey: ['notes', page, search, initialTag],
     queryFn: () =>
       fetchNotes({
         page,
         perPage: PER_PAGE,
-        search
+        search,
+        tag: initialTag
       }),
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,

@@ -21,7 +21,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
   const queryClient = getQueryClient()
 
   await queryClient.prefetchQuery({
-    queryKey: ['notes', page, search],
+    queryKey: ['notes', page, search, undefined],
     queryFn: () => fetchNotes({ page, perPage: PER_PAGE, search })
   })
 
@@ -30,6 +30,7 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
       <NotesClient
         initialPage={page}
         initialSearch={search}
+        basePath="/notes" 
       />
     </HydrateClient>
   )

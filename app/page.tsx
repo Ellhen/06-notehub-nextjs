@@ -2,9 +2,9 @@ import css from './Home.module.css'
 
 export default function Home() {
   return (
-    <main className="flex flex-1">
+    <main className={css.main}>
       <div className={css.container}>
-        <h1 className={`${css.title} mt-10`}>Welcome to NoteHub</h1>
+        <h1 className={`${css.title} mt-15`}>Welcome to NoteHub</h1>
         <p className={css.description}>
           NoteHub is a simple and efficient application designed for managing personal notes. It
           helps keep your thoughts organized and accessible in one place, whether you are at home or
